@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* --- SCROLL SPY (ACTIVE NAVIGATION LINK) --- */
   const sections = document.querySelectorAll('section[id]');
-  
+
   function scrollActiveSpy() {
     const scrollY = window.pageYOffset;
 
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
-  
+
   window.addEventListener('scroll', scrollActiveSpy);
 
 
@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* --- WHATSAPP CONSULTATION LINK BUILDER --- */
   const consultButtons = document.querySelectorAll('.btn-consult');
-  const PHONE_NUMBER = '593984534720';
+  const PHONE_NUMBER = '593991223536';
 
   consultButtons.forEach(button => {
     button.addEventListener('click', (e) => {
@@ -163,10 +163,10 @@ document.addEventListener('DOMContentLoaded', () => {
       // Validation logic
       const isNameValid = validateField(nameInput, val => val.trim().length > 0);
       const isLastnameValid = validateField(lastnameInput, val => val.trim().length > 0);
-      
+
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       const isEmailValid = validateField(emailInput, val => emailRegex.test(val.trim()));
-      
+
       const isPhoneValid = validateField(phoneInput, val => val.trim().length >= 7);
       const isMessageValid = validateField(messageInput, val => val.trim().length > 0);
 
@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Mock API transmission
         console.log('Sending technical request details:', formData);
-        
+
         // Show success animation panel
         if (formFeedbackOverlay) {
           formFeedbackOverlay.classList.add('active');
