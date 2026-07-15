@@ -173,29 +173,79 @@ document.addEventListener('DOMContentLoaded', () => {
       const isFormValid = isNameValid && isLastnameValid && isEmailValid && isPhoneValid && isMessageValid;
 
       if (isFormValid) {
+        // --- CONFIGURATION FOR WEB3FORMS ---
+        const WEB3FORMS_ACCESS_KEY = "dc4131c1-d596-4a2a-a61b-b5b613dbec2a";
+
         // Collect form data
         const formData = {
-          name: nameInput.value.trim(),
-          lastname: lastnameInput.value.trim(),
+          access_key: WEB3FORMS_ACCESS_KEY,
+          nombre: nameInput.value.trim(),
+          apellido: lastnameInput.value.trim(),
           email: emailInput.value.trim(),
-          phone: phoneInput.value.trim(),
-          message: messageInput.value.trim()
+          telefono: phoneInput.value.trim(),
+          mensaje: messageInput.value.trim(),
+          subject: `Nueva Cotización de Montacargas - ${nameInput.value.trim()} ${lastnameInput.value.trim()}`,
+          from_name: "Web Montacargas"
         };
 
-        // Mock API transmission
-        console.log('Sending technical request details:', formData);
-
-        // Show success animation panel
-        if (formFeedbackOverlay) {
-          formFeedbackOverlay.classList.add('active');
+        const btnSubmit = document.getElementById('btn-submit-form');
+        const originalText = btnSubmit ? btnSubmit.innerHTML : 'Enviar Solicitud';
+        if (btnSubmit) {
+          btnSubmit.disabled = true;
+          btnSubmit.innerHTML = 'Enviando...';
         }
 
-        // Trigger WhatsApp window as a dual fallback so the customer gets instant assistance
-        setTimeout(() => {
-          const userMsg = `Hola EPS Supplier, acabo de enviar una solicitud de contacto.\n\n*Nombre:* ${formData.name} ${formData.lastname}\n*Email:* ${formData.email}\n*Teléfono:* ${formData.phone}\n*Requerimiento:* ${formData.message}`;
-          const waUrl = `https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(userMsg)}`;
-          window.open(waUrl, '_blank');
-        }, 1500);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 seconds timeout
+
+        // Send technical request details using Web3Forms API
+        fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(formData),
+          signal: controller.signal
+        })
+        .then(response => {
+          clearTimeout(timeoutId);
+          return response.json().then(data => {
+            if (!response.ok || !data.success) {
+              throw new Error(data.message || 'Network response was not ok');
+            }
+            return data;
+          });
+        })
+        .then(data => {
+          console.log('Form submitted successfully:', data);
+
+          // Show success animation panel
+          if (formFeedbackOverlay) {
+            formFeedbackOverlay.classList.add('active');
+          }
+
+          // Reset the form
+          if (contactForm) {
+            contactForm.reset();
+          }
+        })
+        .catch(error => {
+          clearTimeout(timeoutId);
+          console.error('Error submitting form:', error);
+          
+          if (error.name === 'AbortError') {
+            alert('El servidor de envío de correos está tardando demasiado en responder. Por favor, intenta de nuevo o comunícate por WhatsApp.');
+          } else {
+            alert('Hubo un inconveniente al enviar tu solicitud por correo. Por favor, intenta de nuevo o comunícate directamente por WhatsApp.');
+          }
+        })
+        .finally(() => {
+          if (btnSubmit) {
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = originalText;
+          }
+        });
       }
     });
   }
