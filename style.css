@@ -405,6 +405,7 @@ ul {
 .hero h1 span {
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent-blue-light) 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -631,6 +632,7 @@ ul {
   font-weight: 800;
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent-blue-light) 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   line-height: 1.1;
   margin-bottom: 0.5rem;
