@@ -65,7 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Create "No Results" message element
   const noResultsEl = document.createElement('div');
-  noResultsEl.className = 'no-results hidden';
+  noResultsEl.className = 'no-results';
+  noResultsEl.hidden = true;
   noResultsEl.style.width = '100%';
   noResultsEl.style.gridColumn = '1 / -1';
   noResultsEl.style.textAlign = 'center';
@@ -96,12 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
-      // Toggle no results element
-      if (visibleCount === 0) {
-        noResultsEl.classList.remove('hidden');
-      } else {
-        noResultsEl.classList.add('hidden');
-      }
+      noResultsEl.hidden = query === '' || visibleCount > 0;
     });
   }
 
